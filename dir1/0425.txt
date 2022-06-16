@@ -1,0 +1,188 @@
+union all 上下合併,只能合併相同屬性的
+SELECT * 
+from userinfo
+union ALL
+select 't01','測試員';
+主要用在測試用直接創建資料
+
+SQL用的是TOP(出來的資料只取前三筆)
+mardb跟MYSQL使用的是limit(限制只有三筆)
+
+limit 1 offset 1;
+偏移一筆資料取一筆資料,如要取第二名的資料可用此方式
+
+where 在群組前 having是在群組之後
+<>不等於
+
+使用having可將因為存在null存在而記數時出現的0拿掉
+select address,count(live.hid) as n
+from live right join house on live.hid = house.hid
+group by address
+having n <>0;
+
+視觀表 View
+內只有一個查詢,建立後會在左側"檢視表"內,可當作一個tabe用,利用此方式可將原本程式壓縮成一個tabe,會更加安全
+create view view_max_fee as
+依樣可以設定權限
+create view vw_max_fee_with_address as
+SELECT a.tel,max_n,address
+FROM view_max_fee as a, phone as b, house as c 
+where a.tel = b.tel and b.hid = c.hid;
+一樣可以透過此方式直接串連其他資料表
+
+insert into
+若沒有指定欄位,插入方式欄位順序要一致
+insert into userinfo values('A03''王')
+或者可以指定欄位插入資料
+insert into userinfo(uid) values('A03')
+常用來處理新會員加入時的
+
+複製資料,資料欄位順序需要一致
+insert into new_tabe select * from userinfo;
+或者需要加入指定欄位名稱插入
+insert into new_tabe(uid,cname) select * from userinfo;
+
+創建資料表caetae table
+SQL：
+select * into new_table from userinfo
+
+MySQL：
+caetae table 新增資料表將from的資料複製塞進去
+常用在將過去的資料移到另一個資料表備用
+
+更改資料update
+update new_tabe set cname=null;
+將cname全部改成null
+
+要指定修改資料時一定要下"where"!!
+update new_tabe set cname='測試', uid='B01' where uid='A01';
+以上條件:將UID等於A01的修改成
+若是下錯可以等跑完之後下復原指令,若直接中段則只能使用備份的來救
+
+刪除資料delete
+刪除所有電話帳單:
+delete from bill(刪很慢,但使用這方式可以復原)
+truncate table bill(刪很快,但是無法復原)
+刪除指定資料
+truncate 可以接user 、databass等
+delete from userinfo
+where uid="B01"
+
+交易
+commit、rollback
+要使用相對應資料庫引擎才支援交易功能
+所有宣告後面都要加上;
+MySQL:
+start transaction 
+宣告交易開始
+commit
+宣告交易成功
+rollback
+宣告交易失敗,回復交易前狀態
+start TRANSACTION;
+DELETE from new_tabe where cname='測試';
+rollback;
+交易開始時候,,抓取的資料在自己的沙盒環境操作,原始資料庫資料是沒動到的
+
+串接刪除在結構 -> 關聯檢視
+phpMYadmin是從左往右
+SQL是從右往昨看
+
+ON DELETE 預設RESTRICT(在關聯時無法刪除此)
+若設定SET NULL則代表(在關聯時可以刪除但是資料會跳NULL)
+
+若新增屬性無法建立關聯則代表資料的資料庫有問題,可能其中有資料對不上,關聯數量及屬性
+
+資料庫主檔案>設計器>可查看ER圖，若無設定參考索引則沒有關聯線,依照專案內行畫ER圖,只放有關聯的資料表(如人事系統)
+
+時間日期:時間處理上每個資料庫函數都不同
+參數1、2不用背可以留著參考、適用MYSQL
+select now()傳回時間:是本地時區
+select adddate(now(),5);增加日期五天,自動計算大月小月
+select adddate(now(),interval -3 hour);現在時間減少3個小時
+select adddate(now(),interval 3 hour);將負數改成正數則代表現在時間加三個小時
+datediff()設定時間與現在距離多少天
+select datediff(now(),'2017/3/2');預設是天
+select datediff(now(),'2017-3-2');時間格式可改成-也可以或者24小時至
+date_format()取指定時間的年月份單獨時間
+select date_format(now(),'%Y');單獨抓出西元年
+select date_format(now(),'%W');抓星期幾
+第二個字串組合可以自己弄,比如'%Y年'出來就是西元幾'年',符號也可以組合多個時間格式匯出
+
+dayname()傳回星期幾(文字型態)
+select dayname(now());
+世界標準時間UTC
+select utc_timestamp();查看出來時間為當前UTC+0時間
+select adddate(utc_timestamp(), interval 8 hour);手動加8個小時(沒什麼用)
+大部分支援的日期時間字串表示法
+'2018/1/8 12:32:18.764'
+
+查詢指定時間:
+查詢日期為2018年1月份的資料
+若 dd 為欄位名稱
+select *
+from bill
+where
+year(dd) = 2019 and
+month(dd) = 3;
+---date出來的都是數字型態不用加''字串
+
+使用date_format方式撈取指定時間的資料
+方法1:
+select * from bill
+where date_format((dd),'%Y-%m')='2019-03';
+方法2:
+select * from bill
+where date_format((dd),'%Y%m')=201903;
+
+查詢某時段資料
+select * from bill where dd between '2019/1/1' and '2019/2/1';
+列出2017年12月23號18:10:00到現在資料
+select * from bill where dd Between '2017/12/23 18:10:00' And now();
+
+unix_timestamp()
+定義：距離格林威治時間 1970/1/1 0:0:0 有多少秒(UTC+0)
+select unix_timestamp();
+若出現小數點是千分之一秒,第三位是毫秒
+select from_unixtime(unix_timestamp());
+使用from_unixtime套用將毫秒轉回本地時間
+
+分兩個欄位
+UTC時間資料型態date、處理好時間的00:00,convert_tz
+若資料庫只存unix_timestamp型態,可以透過前端或者後端轉成要的時間
+
++00:00代表顯示方式時間(小時)；(分鐘)
+
+在資料庫處理時間方式：
+select convert_tz(utc_timestamp(),'+00:00','+08:00')
+第一個是標準時間參數,第二個+00:00,第三個參數是所在時區+8
+
+"一律要存UTC時間"
+
+userinfo補上生日欄位,資料型態date,查詢出來計算出年齡,假設生日是今天,昨天跟明天都會差一歲,如果時間都沒變就是BUG
+
+補充一下 這題題目:bill帳單的資料目前只有一月~三月的資料,下半年隨便補個幾筆資料,請計算每一隻電話上半年跟下半年,帳單總額各別多少
+
+步驟一：
+select *,year(dd),floor(month(dd)/ 6)
+from bill;
+
+一、將在bii資料表中點擊上方[新增],新增一筆或數筆2019下半年的資料
+二；使用year(dd)將日期年份印出,在使用month(dd)將月份印出,併加上/ 6(結果少於1代表是前半年,可以被6整除)
+
+步驟二：
+select *,year(dd),floor(month(dd)/ 6),sum(fee)
+from bill
+group by floor(month(dd)/ 6);
+
+先使用floor整數套在月份,讓其資料形成1或者0,也可以讓前後端判定0=上半年,1=下半年,在將floor(month(dd)/ 6)加入到群組,讓其0跟1跟別群組圈再一起,最後再加總sum(fee)最後就可知道上半年跟下半年總費用
+
+365.25閏年
+
+
+步驟二：
+使用datediff(now())函數,查看userinfo中的生日距離今天差多少"天"
+select *,datediff(now(),birthday)　from userinfo;
+
+步驟三:
+將上述為轉換天數的函數/ 365.23(閏日),此時送出時會包含小數點,在將此部分使用整數floor包住as"今年幾歲",然後可以優化顯示,改成只有名字、生日、今年幾歲,最後再將where cname and birthday is not null將包含null的值移除顯示

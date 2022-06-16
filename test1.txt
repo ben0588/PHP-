@@ -1,0 +1,7 @@
+上午:
+
+array陣列深度解說
+array宣告陣列變數方法
+array陣列與for迴圈應用
+var_dump 檢查變數詳細型別及數值等
+foreach()語法加強應用

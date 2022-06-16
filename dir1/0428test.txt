@@ -1,0 +1,203 @@
+mysqldump -R -u root bookbackup > c:\Users\user\Desktop\book0429.sql
+
+mysql -u root bookbackup < C:\Users\user\Downloads\bookbackup.sql
+
+
+挑的功能至少要五個資料表
+ppt 大概15分鐘
+第一張 我想要做這個網站的這個功能
+第二張 ER表(5~7張)方形的-用工具畫
+第三張 資料表跟欄位都用中文顯示
+第四張 設計一個或兩個預存程序
+要說明這功能甚麼用
+
+開始出發(要看每月的新書)->分類(選擇想要看的類型)以及喜歡的作者、出版社點擊後可以查看到相關的著作
+
+作者 出版社 時間 
+
+依照年月搜尋：
+set @n=0;
+call with_yearmonth(202204,@n);
+select @n;
+依照類別搜尋:
+set @n=0;
+call with_class('電腦資訊',@n);
+select @n;
+依照作者搜尋:
+set @n=0;
+call with_writer('王培仁',@n);
+select @n;
+依照出版社搜尋
+set @n=0;
+call with_publisher('維摩舍',@n);
+select @n;
+
+
+delimiter $$
+create procedure date_1mon(x int,out n int)
+begin
+select * from `書` where date_format((`出版時間`),'%Y%m')=202204;)
+end $$
+delimiter ;
+
+----
+DELIMITER $$
+CREATE PROCEDURE with_yearmonth (y_and_m int, OUT bk varchar(30))
+BEGIN
+ SELECT * FROM 書 
+ WHERE date_format(出版時間,'%Y%m');
+END $$
+DELIMITER ;
+
+set @n = 0;
+call with_yearmonth(202203,@n);
+SELECT @n
+======
+DELIMITER $$
+CREATE PROCEDURE with_yearmonth (y_and_m int)
+BEGIN
+	SELECT 書名, 書.內容, 價格, 作者名, 類別, 出版社, 出版時間 
+FROM 書, 書與作者, 作者, 書與類別, 類別, 出版社
+WHERE 
+ 	書.書id = 書與作者.書id AND 書與作者.作者id = 作者.作者id AND
+    書.書id = 書與類別.書id AND 書與類別.類別id = 類別.類別id AND
+    書.出版社id = 出版社.出版社id AND
+date_format(出版時間,'%Y%m') = y_and_m ;
+END $$
+DELIMITER ;
+
+--新書推薦
+依照每月排序(with_yearmonth)：
+call with_yearmonth(202203);
+
+----作者
+
+DELIMITER $$
+CREATE PROCEDURE with_author (author_m varchar(30))
+BEGIN
+	SELECT 書名, 書.內容, 價格, 作者名, 類別, 出版社, 出版時間 
+FROM 書, 書與作者, 作者, 書與類別, 類別, 出版社
+WHERE 
+ 	書.書id = 書與作者.書id AND 書與作者.作者id = 作者.作者id AND
+    書.書id = 書與類別.書id AND 書與類別.類別id = 類別.類別id AND
+    書.出版社id = 出版社.出版社id AND 作者名=author_m ;
+END $$
+DELIMITER ;
+call with_author('王培仁');
+
+-----依照出版社查詢
+
+DELIMITER $$
+CREATE PROCEDURE with_publisher(pub varchar(300))
+
+BEGIN
+ SELECT 書名, 書.內容, 價格, 作者名, 類別, 出版社, 出版時間 
+ FROM 書, 書與作者, 作者, 書與類別, 類別, 出版社
+ WHERE 
+   書.書id = 書與作者.書id AND 書與作者.作者id = 作者.作者id AND
+     書.書id = 書與類別.書id AND 書與類別.類別id = 類別.類別id AND
+     書.出版社id = 出版社.出版社id AND 出版社.出版社 = pub;
+END $$
+
+DELIMITER ;
+
+call with_publisher('聯經出版');
+
+-----
+DELIMITER $$
+CREATE PROCEDURE with_yearmonth (y_and_m int, OUT bk varchar(30))
+BEGIN
+ FROM 書, 書與作者, 作者, 書與類別, 類別, 出版社
+WHERE 
+  書.書id = 書與作者.書id AND 書與作者.作者id = 作者.作者id AND
+    書.書id = 書與類別.書id AND 書與類別.類別id = 類別.類別id AND
+    書.出版社id = 出版社.出版社id AND
+date_format(出版時間,'%Y%m') = y_and_m ;
+END $$
+DELIMITER ;
+
+
+
+INSERT INTO '出版社'('出版社ID','出版社') VALUES ('z01', '墓想'), ('c02', '旅遊'), ('c03', '飲食料理');
+
+書
+INSERT INTO `書` (`書ID`, `書名`, `價格`, `出版社`, `出版日期`) VALUES ('A20', '地中海減醣料理：哈佛健康餐盤，88道全家幸福共享的地中海優食提案',600, '創意市集', '2022-04-22');
+SELECT * FROM `書`
+
+旅遊
+飲食料理
+文學
+
+作者ID
+INSERT INTO `作者` (`作者ID`, `作者名字`) VALUES ('A02', '楊王');
+
+書ID作者ID關聯
+INSERT INTO `書id作者id關聯` (`書ID`, `作者ID`) VALUES ('1', 'A02');
+
+書ID分類ID關聯
+INSERT INTO `書id分類id關聯` (`分類ID`, `書ID`) VALUES ('B01', 'A01');
+
+類別
+INSERT INTO `類別` (`分類ID`, `類別`) VALUES ('B01', '飲食料理');
+
+串接顯示
+SELECT * FROM `類別` inner join `書id分類id關聯` on `類別`.`分類ID`=`書id分類id關聯`.`分類ID` inner join `書` on `書id分類id關聯`.`書ID`=`書`.`書ID`;
+
+----
+只有印出書名、類型、價格、出版資訊
+
+SELECT `書`.`書名`,`類別`.`類別`,`書`.`價格`,`書`.`出版社`,`書`.`出版日期` FROM `類別` inner join `書id分類id關聯` on `類別`.`分類ID`=`書id分類id關聯`.`分類ID` inner join `書` on `書id分類id關聯`.`書ID`=`書`.`書ID`
+
+SELECT * FROM `書id作者id關聯` inner join `作者` on `書id作者id關聯`.`作者ID`=`作者`.`作者ID`;
+
+----
+印出有多的作者聯合出版的書籍
+
+SELECT `作者`.`作者名字`,`書`.`書名`,`類別`.`類別`,`書`.`價格`,`書`.`出版社`,`書`.`出版日期` FROM `作者` inner join `書id作者id關聯` on `書id作者id關聯`.`作者ID`=`作者`.`作者ID` inner join `書` on `書id作者id關聯`.`書ID`=`書`.`書ID` inner join `書id分類id關聯` on `書`.`書ID`=`書id分類id關聯`.`書ID` inner join `類別` on `書id分類id關聯`.`分類ID`=`類別`.`分類ID`;
+
+(網站規劃)
+小專(大約6/6~6/10)html css js MYSQL JQ(將課程前所學印出)13:30~16:30 /個人 (1人) 報告約5分鐘
+大專 /團體 (可能5~6人) 報告約20分鐘
+網站規劃
+11:00>
+
+設計流程 頁面畫草圖  功能製作抓時間多久完成 
+
+累積個人小作品
+(JQ互動-網球互動小遊戲,自動計分)
+
+
+關於網站規劃:網站=> html css js 資料 配色 =>大專分屬
+說明課程前提
+
+html5語意標籤,通常寫給google機器人看,main主要內容
+https://www.w3schools.com/html/html5_semantic_elements.asp
+
+不可直接時做開發,應確認好需求再進行設計,,再確認之後再開發
+
+
+
+說明小專題與大專製作注意項目
+
+HTML5與以前的技術差異
+加強 語意類型
+CSS目前的版本與相關框架有哪些
+▪ Bootstrap：
+▪ Pure 
+▪ Materialize：
+
+JavaScript 的版本差異
+Mocha ➔ LiveScript ➔ JavaScript
+
+工作角色內容如何劃分
+及須注意項目
+框架介紹 React Angular Vue.js
+
+持續規劃製作周五MYSQL報告
+
+指導網站資料庫結構規劃與需求
+
+
+透過教程提供之參考資料
+進一步了解上述課程內容
+

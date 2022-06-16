@@ -1,0 +1,234 @@
+phpnyadmin上方查看資料庫引擎,MySQL&MaraiBD,目前預設lnnoDB(支援交易)、MyISAM(不支援交易),資料庫上鎖要手動上鎖
+wbeapi呼叫主要回傳以下三種(都是字串格是),常用是json JSON,XML,CSV(欄位中用,隔開,要用excel開才會知道其內容規則)
+MySQL主要使用環境：linux、windoes
+
+BLACKHOLE 黑洞(資料庫引擎)丟進去就消失了(沒什麼用)
+
+程式語法:
+宣告變數
+有三種方法:主要是用第一跟第二種
+宣告變數 n 並且指定初始值 ­ 
+Set @n = 10
+將查詢結果放到變數中(I) ­ 
+Set @n = (select count(*) from userinfo
+)
+­Select @n
+第三種:
+
+變數宣告使用declare
+
+declare n int default 0;
+declare str varchar(20) default '';
+
+python目前韌體也進入了,僅網頁前端無法支援
+
+IF判斷式
+MYSQL主要是 if 後面要加then,結尾加上end if;
+保留字要注意
+
+delimiter $$
+create procedure if_deme()
+begin 
+set @i=20;
+
+if @i >= 20 then 
+ select'值大於20';
+elseif @i <5 then 
+ select'值少於5';
+else 
+ select'值介於5與20之間';
+end if;
+end $$
+
+DELIMITER;
+
+
+set @i = 30;
+call if_deme();
+select @i;
+
+
+loop迴圈
+屬早期使用的語法
+mod=取餘數
+leave label; 離開迴圈
+
+while迴圈(主要用這個)
+while no (迴圈內容) end while
+先檢查
+
+repeat迴圈
+ while 迴圈的差異在於repeat 至少會執行一次
+
+DELIMITER $$
+create procedure acc(n int)
+begin 
+ set @i=0,@sum=0;
+ while @i<=n do 
+  set @sum = @sum + @i;
+  set @i = @i+1;
+ end while;
+ select @sum;
+end $$
+DELIMITER;
+
+1
+
+call acc(20);
+select @i;
+
+
+begin
+set @n = 100000;
+while @n > 0 do
+insert into demo (uid, cname) values (@n, 'AAAAAbbbbbbcccq');
+set @n = @n - 1;
+end while;
+end$ 
+
+----自己打
+DELIMITER $$
+create procedure generate_userdate()
+begin
+ set @n = 100000;
+ while @n > 0 do 
+ insert into demo(uid,cname)    values(@n,'AAAAAbbbbbbcccq');
+ set @n = @n - 1;
+ end while;
+end $$
+DELIMITER;
+
+
+select * from demo where uid=100000;
+第一種方式查詢是線性搜尋,沒有建立索引情況下
+(總計 1 筆, 查詢用了 0.0752 秒。)
+第二種是有建立索引下再次重新索引
+(總計 1 筆, 查詢用了 0.0010 秒。)
+
+點開對應資料表,欄位左邊打勾,點擊下列索引再進行設定
+更改成 UNIQUE 代表找到就停
+
+查看查詢是否有使用到索引,開頭加上
+explain 
+EXPLAIN select * from demo where uid=100000;
+可以查看到有設定索引的設定(查看key欄位),比起沒有建立索引的快非常多
+
+錯誤處理
+語法：declare exit handler for sqlexception select 'ERROR'
+若有執行中有發生錯誤將直接結束並印出ERROR錯誤字串,可以使用insert into插入進去log內紀錄
+
+預存程序中使用交易機制
+旗標變數,表示一個狀態,通常是布林值,預設值是false,flag 是變數,
+flag bool default false
+若要設定提款的話可以將變數要求這滿足以下三種f(uid,pwd,money)
+若未滿足可以用這種方式建立交易機制
+若是多國語系的話,select可丟出語系代碼,由後端接收到轉換成該國語言送出
+
+cursor (游標) 科奢
+對每一筆資料作最細微的控制
+­可以單獨處理每一筆資料
+­例如：將阿拉伯數字轉成大寫國字
+­ 1 -> 壹元
+­ 203 -> 貳佰零叁元
+
+只會單獨指向一筆資料,不能同時指向兩筆資料,一定是配合迴圈使用,一個指令無法搞定所有問題時,就需要用到cursor
+
+curs是變數,可以自定義
+CURSOR是一種資料型態
+
+DECLARE curs CURSOR FOR  建立
+select fee from bill
+OPEN curs  開啟
+…
+CLOSE curs 關閉
+
+不用時一定要設定關閉,不然會一直佔用記憶體空間
+
+not found =沒有資料時值
+declare=宣告
+select(斯類)
+
+done 改成turu
+fetch(費取)做兩件事情.close往下移動到第一筆資料,把指向的資料拉出來放在變數內tmp_fee;
+
+練習一：將bill中的fee使用迴圈加總金額,最後印出答值
+DELIMITER $$
+
+create procedure pro_test()
+	begin
+		declare done1 bool default false;
+		declare x1_fee int;
+		declare total_fee int default 0;
+		declare curs1 cursor for select fee from bill;
+		declare continue handler for not found set done1 = true;
+ 
+		open curs1;
+		fetch curs1 into x1_fee;
+ 
+		while not done1 do 
+			set total_fee=total_fee+x1_fee;
+			fetch curs1 into x1_fee;
+		end while;
+ 
+		close curs1;
+		select total_fee;
+	end $$
+    
+DELIMITER;
+call pro_test();
+
+備份
+方法一:
+C:\xampp\mysql\data
+將addressbook壓縮成zip檔案另存硬碟備份,
+方法二,一定要家 大寫-R 才會有備份到函數等:
+
+透過 cd方式接入到bin資料夾內,第二段c:\路徑每台電腦都不童需要再留意
+C:\xampp\mysql\bin>mysqldump -R -u root AddressBook > c:\Users\user\Desktop\backup.sql
+可以設定windoes排成自動執行以上指令(自動備份)
+
+若要設定密碼則用
+mysqldump -u mysqluser -p test_db
+對以上命令稍作解釋:
+
+    -u 意味著你要指定一個 MySQL 使用者名稱來連線資料庫服務,如上面的 mysqluser 即為 MySQL使用者名稱。
+    -p 則意味著你需要有一個有效的,與以上使用者名稱對應的密碼。
+    最後一個引數則是需要備份的那個資料庫的名稱:test_db
+
+還原方式:
+mysql -u root backup < C:\Users\user\Desktop\MySQl備份\backup.sql
+或者將檔案放在bin內再輸入以下
+mysql -u root backup < backup.sql
+
+權限：
+封包攔截器,-R通常代表最高權限,被接管就會遺失整個資料庫,每個資料夾單獨設定使用者權限
+
+-root代表本機,遠端無法登陸,只能本機登入,pma
+
+--建立管理者,通常只會有一個--
+新增使用者:越不顯眼越好
+主機名稱:若要可以遠端則選"任何主機"
+
+再新增使用者介面點擊該使用者名稱編輯權限.再點擊"上方資料庫",先選擇資料夾名稱,再勾資料、結構、管理 權限
+
+cmd登陸使用者方法,再bin資料夾後
+mysql -u abuser -p
+輸入密碼:
+
+顯示資料夾use addressbook
+
+離開：exit
+
+
+挑的功能至少要五個資料表
+ppt 大概15分鐘
+第一張 我想要做這個網站的這個功能
+第二張 ER表(5~7張)方形的-用工具畫
+第三張 資料表跟欄位都用中文顯示
+第四張 設計一個或兩個預存程序
+要說明這功能甚麼用
+
+依照前端需求開始設計資料庫ˋ
+
+
+開始出發(要看每月的新書)->分類(選擇想要看的類型)以及喜歡的作者                                                                                                               

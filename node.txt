@@ -1,0 +1,628 @@
+web socat
+聊天系統:持續保持連線中,當有收到訊息時才主動通知對方
+
+會員系統中的[記住我]功能屬於儲存在 client端
+上傳圖片由PHP做自動等比例縮放放在web server 
+
+MAMP架構apple電腦也可以用,並非像XAMPP另開虛擬桌面方式
+
+一台電腦最多有
+0~65535埠號port,要自己設定至少1024之後
+每個server埠號都是獨立且各自運作
+
+PHP-VScode好用套件:
+PHP Debug
+PHP Intelephense
+PHP Extension Pack
+
+VSCode開啟檔案路徑:
+xampp=>htdocs=>開啟新資料夾
+
+PHP基本架構:
+<?php
+    "輸入程式碼"
+    // info方法
+    phpinfo();
+?>
+
+文件的主態檔位置:
+Loaded Configuration File	C:\xampp\php\php.ini
+修改主態檔方法:
+必須將主態檔先複製備份,用原檔修改,錯誤再用備份復原!!
+; 代表式文字註解
+Key = Value //只能改Value
+
+開發階段+學習階段 顯示debug錯誤代碼:
+display_errors :on
+正式環境要改成off關掉
+
+
+apache伺服器位置
+Server Root  => C:/xampp/apache(每台電腦位置不同,依照文件查看對應路徑)
+
+檔頭撰寫加密:
+HTTP Headers Information
+
+PHP版本:
+只有5、7、8版
+8.1.6
+1=次版本 基數穩定版 偶數搶鮮版
+PHP要選穩定版,不要抓最新版
+
+Language Reference語法
+Security安全機制
+
+PHP沒有大小寫差別
+弱型別語言:PHP,JavaScript(不用宣告變數型態_隨時都可以改變)
+強型別語言:Java, C#(變數運算一定要相同資料型態)
+$  永遠都是宣告變數
+$_ 系統特殊變數
+
+變數命名規則:
+$[a-zA-Z][a-zA-Z0-9]*
+
+echo 基本呼叫方式:
+gettype() 取得變數類別:
+
+JS 5版 目標練至兩者JQ 交替纂寫語言沒問題
+
+PHP商業公司(Zend)認證:ZCE(針對語言特性熟悉程度)
+PHP除錯方法:頁面原始碼
+文件並無對錯,程式才有
+500 :內部錯誤
+
+\n 頁面原始碼換行(使用雙引號""才有效果)
+"  雙引號處理運算,可直接放入變數
+'  單引號直接印出,不可直接放入變數,但減少效能輸出
+.  字串相加
+{} 字串中放{}代表是變數
++  基本運算式
+-  基本運算式
+*  基本運算式
+/  基本運算式
+true  基本運算相等於1
+false 基本運算相等0,但是不會顯示出來
+(int)() 強制轉換型別(整數)
+
+網址? 代表get請求
+表單form傳送到後端action="xxx.php"
+提交type="submit
+
+$_GET 取得變數: 變數大小寫嚴格
+
+$_GET['x'] 取得表單input name='x'的值
+網頁中交換資料都是字串,因php的語言特性+會自動運算
+
+Warning:嚴重程度低
+Fatal error:非常嚴重的錯誤
+
+if (isset() &&  isset()){
+  設定$_GET['name']有才執行
+}
+
+
+計算輸入西元年分判斷是否是 
+閏年(4年一潤) (100年不潤) (400年潤) (因為誤差)
+
+練習方法: 
+先寫好 
+預想結果 
+再跑程式
+若是答案跟自己想的不同就在查看
+
+運算重點:
+++ -- 哪時候運用要放在在前哪時後在後 
+
+$i = 0
+("初始化執行" "沒寫得跳過不做";(不寫永遠是true) ;"不寫就不執行")
+
+
+
+// 九九乘法表 =>初始進階版
+        <td>
+            <?php 
+                for ($i = 1;$i <= 9;$i++){
+                    $r = 2 * $i;
+                    echo "2 x {$i} = {$r}<br />";
+                };
+                  
+            ?>
+        </td>
+                <td>
+            2 x 1 = 2<br />
+            2 x 1 = 2<br />
+            2 x 1 = 2<br />
+            2 x 1 = 2<br />
+        </td>
+
+// 進階
+            <?php 
+                echo "<td>";
+                for ($i = 1;$i <= 9;$i++){
+                    $r = 2 * $i;
+                    echo "2 x {$i} = {$r}<br />";
+                };
+                echo "</td>";
+            ?>
+
+// 更進階
+
+         <tr>
+            <?php 
+                for ($j =2; $j<=5;$j++){
+                    echo "<td>";
+                    for ($i = 1;$i <= 9;$i++){
+                        $r = 2 * $i;
+                        echo "{$j} x {$i} = {$r}<br />";
+                    };
+                    echo "</td>";
+                }
+            ?>
+         </tr>
+
+// 最終板
+            <?php 
+                for ($k =0;$k <2;$k++){
+                    echo "<tr>";
+                    // $j = 2代表是從2x1開始 $<=5代表跑了四次(2/3/4/5)
+                    for ($j =2; $j<=5;$j++){
+                        // $k第一圈0所以不加總,總共跑兩次(1/2)
+                        // $newJ =$j + ($k * 4) $k總共會跑2次
+                        // 因為第一層四個 2 3 4 5 下層應該是 6 7 8 9 各差4所有*4
+                        $newJ = $j + $k * 4;
+                        echo "<td>";
+                        for ($i = 1;$i <= 9;$i++){
+                            $r = $newJ * $i;
+                            echo "{$newJ} x {$i} = {$r}<br />";
+                        };
+                        echo "</td>";
+                    }
+                    echo "<tr/>";   
+                }
+            ?>
+
+// 定義常數板
+define('ROWS',2)定義常數
+
+
+
+
+找直數 =黃色底
+1~10
+..
+..
+..
+91~100
+
+
+-------------6/13
+加密演算法=>須了解
+電腦記憶體沒有空間,都是線性的
+
+array陣列 與 for迴圈應用
+(一維陣列變數$a[]:key&index 對應 value值)
+當count時只會找到此變數下層元素數量
+
+宣告變數陣列並且給予初始化值
+$ary1 = array(1,2,3,4,'w',true);
+
+var_dump() 檢查變數詳細型別、數值等... (盪噴)
+[]照存放入時的順序=>記憶體位置
+陣列放入[]跳過的中間不存放任何記憶體內容
+陣列主優勢是使用index做運作
+
+陣列更改初始點位置
+$p = array(1 => 0,0,0,0,0,0); 
+
+count() 可檢查陣列內元素數量
+陣列尋訪前可以使用var_dump查看一下
+for+count尋訪陣列方式[可以設定範圍]:
+$ary1 = array(1,2,3,4,'w',true);
+var_dump($ary1);
+echo "<hr/>";
+for ($i=0;$i<count($ary1);$i++){
+    echo "{$i} : {$ary1[$i]} <br/>";
+}
+echo "<hr/>";
+
+
+foreach尋訪陣列方式[只能尋訪全部範圍]:
+<?php
+$ary1 = array(1,2,3,4,'w',true);
+var_dump($ary1);
+echo "<hr/>";
+// as $key 等同index位置 => $value 等同其內容value值,不需要看index值就可以拿掉$key =>這段
+foreach ($ary1 as $key => $value){  
+        echo "{$key} : {$value} <br />";}
+?>
+
+
+練習:不使用陣列、使用陣列
+模擬擲骰子100次,統計每點出現幾次
+
+練習:使骰子出現4/5/6點機率加倍
+| 1  |2  |3  |4  |5  |6 ... | 7 | 8 | 9 |
+|1/6 |1/6|1/6|1/6|1/6|1/6   
+正常1~6都是6/1機率
+但是加入789每個出現機率就是9/1
+然後當出現7就加入4 讓4變成9/2...
+
+
+陣列多維陣列觀念
+
+撲克牌練習:
+52張牌發給4個玩家各13張牌
+用table顯示 黑桃? 順序要理牌
+
+do{}while()敘述句應用
+程式至少要做1次才判斷是否要做
+
+
+
+
+-----
+
+不使用陣列及使用陣列 兩種方式
+實作:模擬擲骰子100次,統計每點出現幾次練習
+如何使骰子456出現機率上升至2倍
+
+影像漸層會使用到&|^二進位運算
+
+下午: 資料交換練習
+$_SERVER 語法介紹
+shuffle & range 應用:
+
+資料交換練習:
+$a = 10 ; $b = 3;
+$temp = $a; $a = $b; $b = $temp;
+echo " a = {$a} b = {$b} <br />";
+// 最後顯示 a = 3, b = 10
+
+洗牌的陣列function:
+shuffle — Shuffle an array
+range()設定起始跟結束
+---應用:
+$poker = range(0,51);
+shuffle($poker);
+
+sort 排序
+rsort 反向排序
+ksort 排序
+
+
+-----------
+function 撰寫 
+優點:重複使用+維護性
+
+
+每講次數就是1次,沒講次數就是全部說
+
+func_num_args() 查看帶入此函示中有幾個參數
+
+strlen() 字串數量統計
+substr(0,1) 取字串範圍0~1
+strpos($總內容,$目標值) 取字串包含$目標值
+正規表示法ER:
+範例: 
+1999-10-10 表示日期
+10:30:40 表示時間
+04-2251106 表示家電
+09-123456778 表示手機電話
+168.192.11.11 表示ip
+以上都算正規表示法的一種
+
+-------6/14
+
+練習:檢查輸入身分證字號是否正確(1~4步驟)
+function checkTwId($id){
+    // 1.length:10 身分證10碼
+    // 2.首碼是英文大寫
+    // 3.第1碼要1或者2
+    // 4.第2~9碼為 數字
+    // 5.第10碼為 檢查碼
+
+    $result = false;
+    // preg_match 比對('/指定內容/',檢查目標(以範例來說輸入值))
+    // '/^[A-Z][12][0-9]{8}$/' 代表^開始$結束
+    if (preg_match('/^[A-Z][12][0-9]{8}$/',$id)){
+        $result = true;
+    };
+preg_match('/^比對內容$/','輸入值');
+練習:檢查輸入身分證字號是否正確(5步驟)bendapis.php
+
+輸入值:
+<?php
+    // include 匯入php使用裡面的function(應酷的)
+    include('bendapis.php');
+
+    if(checkTwId('M122534560')){
+        echo "OK";
+    }else {
+        echo "NO";
+    }
+?>
+
+.= 字串相加
+function內$變數,生命週期 有效範圍只有在裡面
+global $a; 宣告$a變數為全域性變數
+
+---------gd 影像處理 外掛模組
+先透過info查看是否有gd
+後續再到php.ini檔中查看extension是否有gd
+依照8.15 XAMPP中是把該行註解掉
+
+後端畫圖 = 在記憶體中繪製影像 
+除可以在瀏覽器繪製出來 或者 另存新檔
+(圖形驗證器):只能在後端寫驗證,寫在前端可以透過
+
+1.空白產生
+2.既有的畫布
+
+---空白產生: 
+
+產生畫布
+imagecreate — Create a new palette based image
+imagecreate(int $width, int $height): GdImage|false
+$gd = imagecreate(400,20);
+
+作畫|調色盤
+imagecolorallocate — Allocate a color for an image
+imagecolorallocate(
+    GdImage $image,
+    int $red,
+    int $green,
+    int $blue
+): int|false
+imagecolorallocate
+
+清除畫布
+imagedestroy — Destroy an image
+imagedestroy(GdImage $image): bool
+imagedestroy($gd);
+
+
+---既有的影像處理:
+
+給予圖片浮水印|字形驗證上
+imagefttext — Write text to the image using fonts using FreeType 2
+imagefttext(
+    GdImage $image,
+    float $size,
+    float $angle,
+    int $x,
+    int $y,
+    int $color,
+    string $font_filename,
+    string $text,
+    array $options = []
+): array|false
+imagefttext($gd,36,10,170,250,$yellow,'fonts/ben.otf','Hello.World');
+
+
+------
+後端該處理的部分
+
+打開目錄 =>>
+
+在變數前面+@ 抑制系統的錯誤訊息
+resource 資源 蕊壽S
+
+opendir('目標資料夾名稱') 啟動指標
+// 指向|指標 opendir 取目標資料夾,預設傳回是false
+// or 若找不到該資料夾 die跑出錯誤代碼
+// 屬於 resource 資源 蕊壽S
+$fp = opendir('dir2') or die('Server Busy');
+
+closedir($指標變數) 清除指標
+readdir($指標變數)  讀取指定資料夾下文件
+
+
+mkdir(); 創建目錄
+mkdir(
+    string $directory,
+    int $permissions = 0777,
+    bool $recursive = false,
+    ?resource $context = null
+): bool
+
+int $permissions = 0777,權限如下
+   Owner(雍有者)       Group(群組)   Other(使用者)
+可讀 | 可寫 | 可執行
+ 4      2       1
+            (讀取資料夾)
+        7                   7              7
+
+// !is_dir 用來判斷'dir2'資料夾是否已存在,!若是有就不執行
+if (!is_dir('dir2')){
+
+touch 踏取
+file 泛指包含資料夾跟檔案/路徑
+is_file = 判斷是否是檔案
+is_dir = 判斷是否是目錄
+
+// 以下date相關變數都使用 (亞洲台北)時區
+date_default_timezone_set('Asia/Taipei');
+
+Unix時間從UTC 1970年1月1日開始至現在的總秒數
+
+
+unlink 刪除檔案
+
+檔案內容=>
+
+fopen — Opens file or URL
+fopen — 打開  檔案 或 URL
+fopen(
+    string $filename,
+    string $mode,
+    bool $use_include_path = false,
+    ?resource $context = null
+): resource|false
+最後回傳一個是resource資源
+
+
+fopen('路徑+檔名','w') 開啟檔案;
+// mode = 將參數指定對應方法:
+// mode = r  唯讀 
+// mode = r+ 可讀可寫
+// mode = w  只能寫,若不存在就新增檔案,輸入指針位於文件的最開端位置
+導致再次輸入內容時會覆蓋原有資料
+// mode = w+ 可讀可寫
+// mode = a 將輸入指針放在已存在的資料內後方
+
+$fp = fopen('dir2/ben1.txt','w');
+
+fclose('$目標變數') 關閉檔案
+fclose($fp);
+
+輸入檔案內容:
+fwrite('$目標變數','輸入字串Hello,World')
+
+串流要執行的檔案
+fread() 
+
+讀檔案資料=>
+// explode字串切割 以,為分割點
+$data = explode(',',$line);
+
+打開檔案放入變數
+$content = file("dir2/Fstdata.csv");
+
+URL 在w3c是沒有規範限制,但每個瀏覽器URL各別自行限制
+$_GET['inputName'] 傳送URL格式
+$_POST['inputName'] 嚴格前端送的資料(隱藏資料的特性) 
+$_REQUEST['inputName'] 接收前端GET & POST兩者都接收 (瑞塊斯特)
+以上只會傳送字串型內容
+
+form method="get" 當前端使用get,後端也要使用get接收
+form method="post" 當前端使用post,後端也要使用post接收
+
+須具備三種理論:
+1.網路概論
+2.SQL
+3.檔案系統 
+pct 可以寫兩端自定義的通訊協定
+
+上傳 不得不使用post(如圖片)
+因為要上傳所以在form上新增屬性,且只能使用post方式
+<form action="ben43.php" method="post" enctype="multipart/form-data">
+    <input type="text" name="filename" /><br/>
+    <input type="file" name="upload" /><br/>
+    <input type="submit" name="Upload" id="" /><br/>
+</form>
+
+$_GET['']抓的部分都是由web server在給值的
+上傳都是web server在做的,後端主要是將檔案抓下來另存在要得資料夾內
+系統編碼方式不同(windows/map)
+
+----補充:
+php.nin 查詢upload、post 查看相關限制
+memory_limit 內存限制
+max_input_time=60 解析秒數限制
+上傳圖片GD有等比例縮放的function(要查)
+
+---單次單檔上傳
+上傳檔案後另存檔案方法:
+['tmp_name']=已上傳存在web server中的檔案路徑
+
+方法1:
+move_uploaded_file('上傳檔案index名稱','傳送目標路徑'):bool 
+// 上傳時會檢查,正常才會另存路經
+move_uploaded_file($upload['tmp_name'],"upload/{$filename}")
+
+方法2:
+copy('上傳檔案index值','傳送目標路徑'):bool
+// 原檔案會保留
+
+方法3:
+rename('上傳檔案index值','傳送目標路徑'):bool
+// 原檔案直接移動
+
+---單次多檔上傳:
+
+一次處理多個,所以name都使用相同的並且開啟陣列[] 
+input text=file name="upload[]"
+input text=file name="upload[]"
+input text=file name="upload[]"
+
+<?php
+    $upload = $_FILES['upload'];
+    // echo gettype($upload); //檢查資料型態
+
+    // 目標是error要等於0正常的
+    foreach($upload['error'] as $k => $v){
+          // 尋訪目標是error等於0(檔案正常)的情況下才要使用當中的value值
+        if ($v == 0 ){
+            // 因為要保留原檔案,最後存進去才使用['name']
+            move_uploaded_file($upload['tmp_name'][$k],"upload/{$upload['name'][$k]}");
+            echo "OK";
+        }else{
+            echo"NO";
+        }
+    }
+    // var_dump($upload); // 查看後是二維陣列
+?>
+
+上傳檔案傳送至資料庫blob(二進至)最多只能用在頭像上傳
+
+Filesystem 檔案系統 =>下列部分都可以自己在察看
+
+---
+class 重要來自其屬性
+先把功能的屬性寫出來
+
+物件導向概念
+例如:更改體重
+只能透過方法:少吃、運動、吃減肥藥等
+
+點擊新增 => 做增加的功能
+
+-----------------------------------------------
+-----------------------------------------------
+---------------------待整理--------------------
+-----------------------------------------------
+-----------------------------------------------
+PHP的建構程式語法:
+function __construct 
+
+
+----MySQL資料庫應用
+資料庫(Mysql) 與 程式語言(php..) 中間的連接器 conHector 
+
+查看info文件
+odbc 跟資料庫有關
+PDO 連接資料庫
+SQlite = 手機用的資料庫
+
+mysqli
+
+static 不需要物件可以呼叫的方法:
+
+請求 然後 回應 = query
+
+mysqli::prepare  (物件導向)
+mysqli_prepare   (function)
+
+fetch 抓資料 (費取)
+
+常用的解碼方式:
+password_verify()
+openssl_encrypt()
+
+<meta charset="UTF-8" />php最上方新增加編碼方式
+每次請求query都是獨立的
+
+----6/16
+ben55.php開始=>
+
+file_get_contents();
+
+資料庫以SQL運算上來說執行面
+比如: 日期, 若沒有要運算或者使用就可以用字串方式
+
+前端記住我使用 COOKIE方式儲存KET & Value
+
+後端記住我使用  $_SESSION[$key] => value 
+只存需要的(像是密碼就不用,因為用來驗證而已)
+
+購物車寫法:
