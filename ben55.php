@@ -44,7 +44,7 @@
 ?>
 Edit Profile<hr/>
 <form method="GET">
-    <!-- 因為要看到該效果要將POST改成GET,正常在操作時要用POST,然後將上方代碼$_GET改成$_REQUEST -->
+    <!-- 因為要看到該效果要將POST改成GET,正常在操作時要用POST,然後將上方代碼$_GET改成$_  $_REQUEST -->
     <!-- 因為最後修改完畢傳送出去是沒有id值(操作不完整),所以可以透過該方法增加id值,但用戶透過頁面原始碼看得到 -->
     <input type="hidden" name="updateid" value="<?php echo $member->id; ?>">
     <!-- 帳號跟暱稱給予value值 -->

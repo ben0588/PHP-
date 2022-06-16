@@ -1,16 +1,9 @@
 <meta charset="UTF-8" />
 <?php
     // ('連接方式','資料庫帳號','資料庫密碼','資料庫名稱',pout號)
-    // ('localhost(本地)')
+
     $mysqli = new mysqli('localhost','root','','ispan',3306);
-    
-    // 引用後使用以下方式先判斷是否有連接資料庫成功
-    // if ($mysqli){
-    //     echo "ok";
-    // }else{
-    //     echo "NO";
-    // }
-    
+
     // 設定編碼方式:
     $mysqli->set_charset('utf8');
 
@@ -19,7 +12,7 @@
     // 刪除資料
 
     // 給予刪除的目標id值
-    $id = 2;
+    $id = 11;
     // MySQL刪除語法:
     $sql = "DELETE FROM cust WHERE id=?";
     // prepare回傳該物件的實體
