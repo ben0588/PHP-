@@ -603,7 +603,8 @@ static 不需要物件可以呼叫的方法:
 mysqli::prepare  (物件導向)
 mysqli_prepare   (function)
 
-fetch 抓資料 (費取)
+fetch 取/拿走 (費取)
+
 
 常用的解碼方式:
 password_verify()
@@ -621,8 +622,7 @@ file_get_contents();
 比如: 日期, 若沒有要運算或者使用就可以用字串方式
 
 前端記住我使用 COOKIE方式儲存KET & Value
-
-後端記住我使用  $_SESSION[$key] => value 
+後端記住我使用 $_SESSION[$key] => value 
 只存需要的(像是密碼就不用,因為用來驗證而已)
 
 購物車寫法:
