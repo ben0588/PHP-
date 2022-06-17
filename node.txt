@@ -604,8 +604,9 @@ mysqli::prepare  (物件導向)
 mysqli_prepare   (function)
 
 fetch 取/拿走 (費取)
-
-
+-------------------------------------------
+-------------------------------------------
+-------------------------------------------
 常用的解碼方式:
 password_verify()
 openssl_encrypt()
@@ -624,5 +625,32 @@ file_get_contents();
 前端記住我使用 COOKIE方式儲存KET & Value
 後端記住我使用 $_SESSION[$key] => value 
 只存需要的(像是密碼就不用,因為用來驗證而已)
+ession(雖選)
 
 購物車寫法:
+
+icon頭像_資料庫可txt或
+使用AJAX檢查是否帳號已存在
+
+AJAX = A(非同步)J(JS)A(AND)X(XML)
+https://www.w3schools.com/js/js_ajax_http.asp
+
+            
+登陸頁面login => 註冊register => 成功返回
+
+()
+登陸頁面login 
+登入輸入後檢查帳號跟密碼是否有錯checkAccount 
+驗證成功:進入main主畫面 
+驗證失敗:返回login登陸頁面
+
+MVC
+發送請求 =>交由content => 
+由交由content分配mode(模組)方法工作
+在各至處理完返回content
+再由content傳送給view再返回請求端
+
+資料庫最好理論 需具備搜尋功能 並非只單純存檔案
+
+
+

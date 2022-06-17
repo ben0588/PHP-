@@ -1,5 +1,6 @@
 <?php
-    
+    // 驗證會員登錄密碼是否相同
+
     include('sql.php');
 
     // spl_autoload_register自動註冊
@@ -7,6 +8,8 @@
         // require_once 載入完只會跑一次
         require_once $className . '.php';
     });
+    // 啟動ession
+    session_start();
 
     // 沒有獲取到'account'name值就會轉回本地login.php檔案
     if(isset($_REQUEST['account'])) header("Location:login.php");

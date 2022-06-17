@@ -26,7 +26,7 @@
     }
 
 </script>
-<h1> TEST </h1>
+<h1> 新增、修改、刪除 </h1>
 <hr />
 <a href="ben54.php">Add New Member</a>
 <table border="1" width="100%">

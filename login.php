@@ -1,6 +1,7 @@
 <?php   
 ?>
-
+<!-- 會員登入 -->
+<h3>會員登入頁<h3>
 <form action="checkAccount.php" method="POST">
     <!-- 建構會員登錄樣式: -->
     <!-- 既有資料做登陸 -->
