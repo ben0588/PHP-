@@ -26,15 +26,15 @@
 
     // 使用while迴圈尋訪全部的資料
     // ------物件招:
-    while($row = $result->fetch_object()){
-        echo "{$row->id}:{$row->{'cont-name'}}:{$row->tel}:{$row->birthday} <br/>";
-    }
+    // while($row = $result->fetch_object()){
+    //     echo "{$row->id}:{$row->{'cont-name'}}:{$row->tel}:{$row->birthday} <br/>";
+    // }
 
     // ------陣列招:
     // 存取方使用while迴圈顯示array內容
     // 共有兩種存取方式 [0][1][2]..、['id']['cname']..
-    // array(8) { [0]=> string(1) "1" ["id"]=> string(1) "1" [1]=> string(3) "Ben" ["cname"]=> string(3) "Ben" [2]=> string(3) "123" ["tel"]=> string(3) "123" [3]=> string(10) "1992-02-05" ["birthday"]=> string(10) "1992-02-05" }
     // var_dump($row);
+    // 顯示內容 : // array(8) { [0]=> string(1) "1" ["id"]=> string(1) "1" [1]=> string(3) "Ben" ["cname"]=> string(3) "Ben" [2]=> string(3) "123" ["tel"]=> string(3) "123" [3]=> string(10) "1992-02-05" ["birthday"]=> string(10) "1992-02-05" }
     // while( $row = $result->fetch_array() ){
     //     echo "{$row['id']}:{$row['cname']}:{$row['tel']}:{$row['birthday']} <br/>";
     // }

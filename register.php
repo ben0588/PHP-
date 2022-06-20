@@ -23,9 +23,10 @@
             // 其他GET、POST、COOKIE 這三個會自動轉換,所以不用addslashes()轉換
             $icon = addslashes(file_get_contents($_FILES['icon']['tmp_name']));
             $icontype = $_FILES['icon']['type'];
-            
+
             // 若要將圖片存成文字方式:(待實作)
             // $icon = base64_encode(addslashes(file_get_contents($_FILES['icon']['tmp_name'])));
+            // $icontype = $_FILES['icon']['type'];
          
         }
 
