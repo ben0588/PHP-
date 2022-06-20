@@ -674,3 +674,28 @@ ACK 用於確認資料有無正確的傳輸到接收端
 物件導向:重點
 =>先想屬性(核心)=>想好功能
 傳遞甚麼參數會傳回甚麼內容
+
+session 若要引用物件的話,要設定session_start()
+
+pid 可以當作商品id
+qty 可以當作商品數量
+
+JQ= status 狀態 (斯day鳩斯)
+$.ajax (get跟post)都可以用
+
+設定變數 外部存取權限, 從小到大
+private    私有(外部就無法透過給值修改)
+protected  保護(引用類別可以使用該屬性)
+public(var)
+
+
+ // instanceof 用來除錯, 用來$b1是不是一台Bike
+    // 用來判斷 $變數 是不是 對應Class
+    if ($s1 instanceof Scooter){
+        echo "OK";
+    }else{
+        echo "NO";
+    }
+
+
+副檔名xml,現在比較少見,範例寫在ben64.php

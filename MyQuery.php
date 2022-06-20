@@ -3,6 +3,13 @@
 
     class MyQuery {
         private $mysqli;
+        
+        //進階增加維護姓->定義常數
+        const QUERY_NAME = 'name';
+        const QUERY_TEL = 'tel';
+        const QUERY_ADDRESS = 'adder';
+        // 設定完畢後去ben61.php修改輸入條件
+        
 
         // 將從外面輸入的值放入this變數$mysqli
         function __construct($mysqli){

@@ -5,10 +5,16 @@
     spl_autoload_register( function($className){
         require_once $className . '.php';
     });
+
     
     $myquery = new MyQuery($mysqli);
-    $name =  $myquery->getProductData(500,'name');
-    $city =  $myquery->getProductData(500,'city');
+    // 輸入搜尋 目標的對象, 對應 資料庫標籤名稱
+    // $name =  $myquery->getProductData(500,'name');
+    // $city =  $myquery->getProductData(500,'city');
+
+        // 增加維護性改成以下,來自MyQuery.php新增常數後
+        $name =  $myquery->getProductData(456,MyQuery::QUERY_NAME);
+        $tel =  $myquery->getProductData(456,MyQuery::QUERY_TEL);
     
     echo "{$name}:{$city} <br/>";
 
